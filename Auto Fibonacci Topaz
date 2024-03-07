@@ -1,0 +1,52 @@
+//+------------------------------------------------------------------+
+//|                                                     FibonacciPips|
+//|                                      Copyright 2024, Your Company|
+//|                                       clintontbruce@gmail.com|
+//+------------------------------------------------------------------+
+#property strict
+
+// Input parameters
+input int fibLevels = 5; // Number of Fibonacci levels
+input double startPoint = 1.0; // Fibonacci starting point
+input double endPoint = 2.0; // Fibonacci ending point
+
+//+------------------------------------------------------------------+
+//| Expert initialization function                                   |
+//+------------------------------------------------------------------+
+int OnInit()
+{
+    // Calculate retracement levels
+    double fibRetracementLevels[fibLevels];
+    double range = endPoint - startPoint;
+    for(int i = 0; i < fibLevels; i++) {
+        fibRetracementLevels[i] = startPoint + range * (double)i / (fibLevels - 1);
+    }
+    
+    // Calculate pips for each retracement level
+    double priceDiff = MathAbs(endPoint - startPoint);
+    double pipSize = Point * 10; // Assuming 4 digit broker
+    int decimalPlaces = Digits - 1;
+    double pipValue = pipSize * MathPow(10, decimalPlaces);
+    double pipRetracementLevels[fibLevels];
+    for(int i = 0; i < fibLevels; i++) {
+        double pipDiff = MathAbs(startPoint - fibRetracementLevels[i]) / Point;
+        pipRetracementLevels[i] = pipDiff * pipValue;
+    }
+    
+    // Print Fibonacci levels and corresponding pips
+    for(int i = 0; i < fibLevels; i++) {
+        Print("Fibonacci Level ", i, ": ", fibRetracementLevels[i], " | Pips: ", pipRetracementLevels[i]);
+    }
+    
+    return INIT_SUCCEEDED;
+}
+
+//+------------------------------------------------------------------+
+//| Expert deinitialization function                                 |
+//+------------------------------------------------------------------+
+void OnDeinit(const int reason)
+{
+    // Clean up if necessary
+}
+
+//+------------------------------------------------------------------+
